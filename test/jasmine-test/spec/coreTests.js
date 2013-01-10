@@ -1,5 +1,5 @@
 var coreTests = [
-  { 
+  {
     name: "base cases",
     tests: [
       {
@@ -214,7 +214,7 @@ var coreTests = [
       }
     ]
   },
-  { 
+  {
     name: "partials",
     tests: [
       {
@@ -604,7 +604,7 @@ var coreTests = [
       {
         name: "using len in array reference Accessing",
         source: "{#list3}{.[$len].idx}{/list3}",
-        context: { "list3": [ 
+        context: { "list3": [
                     [{"idx": "0"},
                      {"idx": "1"},
                      {"idx": "2"}],
@@ -946,7 +946,7 @@ var coreTests = [
   {
     name: "dynamics keys",
     tests: [
-      {  
+      {
         name: "blocks with dynamic keys",
         source: ['{<title_A}',
                     'AAA',
@@ -1052,6 +1052,27 @@ var coreTests = [
                   },
         expected: "Hello Foo Bar World!",
         message: "should test scope of context function"
+      },
+      {
+        name:     "test that deep stack functions have the correct scope",
+        source:   "{getName1}{getName2}{getName3}",
+        context:  (function(){
+                    var context = dust.makeBase({
+                      name: '1Bob',
+                      getName1: function(){ return this.name;}
+                    });
+                    var instance = context.push({
+                      name: '2Joe',
+                      getName2: function(){ return this.name;}
+                    });
+                    instance = instance.push({
+                      name: '3Tim',
+                      getName3: function(){ return this.name;}
+                    });
+                    return instance;
+                  }()),
+        expected: "1Bob2Joe3Tim",
+        message: "Should allow for deep stack functions"
       }
     ]
   },
